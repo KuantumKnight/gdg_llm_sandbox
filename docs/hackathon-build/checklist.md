@@ -65,7 +65,7 @@
   Acceptance: A clean clone can start the same image locally; container health/readiness pass; configuration stays external; CI runs lint, types, tests, secret scanning, image build, and smoke checks.
   Verify: `docker compose up -d --build && docker compose ps && docker compose exec -T api python -m app.smoke && docker compose down`
 
-- [ ] **10. Complete README, operator guide, and deterministic demo workflow**
+- [x] **10. Complete README, operator guide, and deterministic demo workflow**
   Spec ref: `spec.md > 17. External APIs and Dependency Documentation; 21. Demo and Submission Flow`
   What to build: Expand the README with setup, API examples, data flow, security boundary, access control, edge cases, failure/charging behavior, cost/scaling rationale, encountered problems/mitigations, test commands, deployment steps, and a no-cost demo script.
   Acceptance: A reviewer can reproduce and understand the project from the repository, demonstrate normal/solve/replay behavior in under five minutes, and identify all deliberate security tradeoffs.

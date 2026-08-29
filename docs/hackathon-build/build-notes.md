@@ -108,3 +108,9 @@ The local Docker daemon remains unavailable, so the real-Redis case is skipped l
 Added a pinned Python 3.13 multi-stage image with a non-root runtime, minimal build context, Compose API/Redis topology, dependency-free health probe, schema-valid Render Blueprint, tracked-file credential scan, and GitHub Actions quality and container jobs. CI executed the real-Redis Lua test, 85% coverage gate, secret scan, image build, Compose health wait, and in-container readiness smoke successfully.
 
 Provisioned a private free Render Key Value instance in Singapore, wired it to the existing auto-deployed web service, and verified `/health/ready` plus the complete normal-attempt, exact-replay, injection-solve, and hint-reveal flow at `https://gdg-llm-sandbox-637q.onrender.com`. The Blueprint keeps Render's existing immutable Python runtime and locked `uv` environment; Docker provides the equivalent non-root local and CI artifact.
+
+## 2026-08-30 - Build item 10 complete
+
+Replaced the design-phase README with a reviewer-ready quick start, live links, architecture and request flow, API map, security/privacy boundary, failure charging matrix, configuration, verification, deployment, scaling/cost rationale, tradeoffs, and documentation index. Added a production operator guide covering preflight, settings, health, rotation, monitoring, incident response, capacity, and event closeout.
+
+Added credential-safe smoke and deterministic demo CLIs. The live demo command verified readiness, isolated session creation, normal refusal, exact replay without a second charge, injection solve, hint unlock, and solved-session read while keeping the bearer out of output.
