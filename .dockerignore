@@ -1,0 +1,27 @@
+.git
+.github
+.env
+.env.*
+!.env.example
+.venv
+__pycache__
+*.py[cod]
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.coverage
+htmlcov
+dist
+build
+*.egg-info
+tests
+docs
+tmp
+*.log
+*.pem
+*.key
+GDG Cloud&DevOps Round 2.pdf
+.idea
+.vscode
+.DS_Store
+Thumbs.db

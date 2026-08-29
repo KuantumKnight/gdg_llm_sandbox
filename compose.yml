@@ -1,0 +1,39 @@
+services:
+  redis:
+    image: redis:7.4-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no", "--maxmemory-policy", "noeviction"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 1s
+      retries: 20
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    init: true
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      APP_ENV: development
+      REDIS_URL: redis://redis:6379/0
+      ROUND_ACCESS_CODE: "${ROUND_ACCESS_CODE:-dev-round-access-code}"
+      SESSION_TOKEN_PEPPER: "${SESSION_TOKEN_PEPPER:-dev-session-token-pepper-change-me}"
+      PROOF_DERIVATION_SECRET: "${PROOF_DERIVATION_SECRET:-dev-proof-derivation-secret-change-me}"
+      IDEMPOTENCY_DIGEST_SECRET: "${IDEMPOTENCY_DIGEST_SECRET:-dev-idempotency-digest-secret-change-me}"
+      REPLAY_ENCRYPTION_KEY: "${REPLAY_ENCRYPTION_KEY:-ZGV2LXJlcGxheS1lbmNyeXB0aW9uLWtleS0wMDAwMDA=}"
+      NEXT_ROUND_HINT: "${NEXT_ROUND_HINT:-Development hint: configure the real next-round clue.}"
+      OBSERVABILITY_TOKEN: "${OBSERVABILITY_TOKEN:-dev-observability-token-change-me}"
+      FORWARDED_ALLOW_IPS: 127.0.0.1
+    ports:
+      - "127.0.0.1:8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-m", "app.smoke", "--path", "/health/ready", "--attempts", "1"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s

@@ -1,0 +1,51 @@
+previews:
+  generation: off
+
+services:
+  - type: web
+    name: gdg-llm-sandbox
+    runtime: python
+    region: singapore
+    plan: free
+    buildCommand: pip install uv==0.11.24 && uv sync --locked --no-dev --no-editable
+    startCommand: .venv/bin/uvicorn app.main:app --host 0.0.0.0 --port $PORT --proxy-headers --forwarded-allow-ips $FORWARDED_ALLOW_IPS
+    autoDeployTrigger: checksPass
+    healthCheckPath: /health/ready
+    maxShutdownDelaySeconds: 30
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: PYTHON_VERSION
+        value: 3.13.7
+      - key: LOG_LEVEL
+        value: INFO
+      - key: FORWARDED_ALLOW_IPS
+        value: "*"
+      - key: REDIS_URL
+        fromService:
+          name: gdg-llm-sandbox-state
+          type: keyvalue
+          property: connectionString
+      - key: ROUND_ACCESS_CODE
+        sync: false
+      - key: SESSION_TOKEN_PEPPER
+        generateValue: true
+      - key: PROOF_DERIVATION_SECRET
+        generateValue: true
+      - key: IDEMPOTENCY_DIGEST_SECRET
+        generateValue: true
+      - key: REPLAY_ENCRYPTION_KEY
+        generateValue: true
+      - key: NEXT_ROUND_HINT
+        sync: false
+      - key: OBSERVABILITY_TOKEN
+        generateValue: true
+      - key: PROVIDER_PRESETS
+        sync: false
+
+  - type: keyvalue
+    name: gdg-llm-sandbox-state
+    region: singapore
+    plan: free
+    maxmemoryPolicy: noeviction
+    ipAllowList: []
