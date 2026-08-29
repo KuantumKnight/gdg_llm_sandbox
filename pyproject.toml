@@ -36,7 +36,15 @@ packages = ["app"]
 [tool.pytest.ini_options]
 addopts = "-ra --strict-markers"
 asyncio_mode = "auto"
+markers = ["real_redis: requires TEST_REDIS_URL and an isolated real Redis database"]
 testpaths = ["tests"]
+
+[tool.coverage.run]
+source = ["app"]
+
+[tool.coverage.report]
+fail_under = 85
+show_missing = true
 
 [tool.ruff]
 line-length = 100
@@ -58,4 +66,3 @@ plugins = ["pydantic.mypy"]
 [[tool.mypy.overrides]]
 module = ["prometheus_client.*"]
 ignore_missing_imports = true
-

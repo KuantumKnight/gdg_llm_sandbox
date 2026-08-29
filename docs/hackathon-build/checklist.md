@@ -53,7 +53,7 @@
   Acceptance: Logs, metrics, errors, Redis inspection, and OpenAPI contain no live credentials, access tokens, prompts, proof tokens, system prompts, or hints; health and metrics reveal only intended operational data.
   Verify: `uv run pytest tests/security tests/api/test_metrics.py`
 
-- [ ] **8. Finish the automated verification matrix and load-safe test doubles**
+- [x] **8. Finish the automated verification matrix and load-safe test doubles**
   Spec ref: `spec.md > 15. Testing and Verification; 20. Risks and Verification Gates`
   What to build: Complete unit, API, contract, real-Redis integration, race, expiry, charging, malformed-input, SSRF, secret-leak, and deterministic provider-stub tests; enforce coverage and quality gates.
   Acceptance: Every PRD epic has automated evidence; concurrent calls preserve counts and solve state; test runs make no paid provider calls; coverage focuses on security and state transitions.

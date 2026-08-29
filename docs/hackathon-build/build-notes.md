@@ -96,3 +96,9 @@ Replay returns the exact prior body without another charge; changing the prompt 
 Added allowlist-only JSON logs with defense-in-depth secret redaction, request correlation and latency records, low-cardinality Prometheus HTTP/session/attempt/provider metrics, constant-time bearer protection for the scrape endpoint, strict default CORS, API no-store behavior, and browser-facing response security headers.
 
 Security regressions verify that configured secrets stay out of public configuration and OpenAPI, unknown log fields such as prompts are discarded, sentinel credentials are redacted, oversized bodies fail before parsing, and metrics disclose only bounded operational labels. Ruff, strict mypy, seven focused privacy/metrics tests, and the full 55-test suite pass.
+
+## 2026-08-30 - Build item 8 complete
+
+Added an explicit PRD-to-test verification matrix, repository-level 85% coverage enforcement, provider failure/accounting integration tests, and an opt-in test that executes the production Lua transitions against real Redis under a unique self-cleaning namespace. The deterministic stub and mocked provider clients keep the default suite free of paid calls.
+
+The local Docker daemon remains unavailable, so the real-Redis case is skipped locally unless `TEST_REDIS_URL` is supplied; the packaging milestone will run it through the CI Redis service. Ruff, strict mypy, all 57 locally runnable tests, and 91% application coverage pass.

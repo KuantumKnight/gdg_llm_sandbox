@@ -5,6 +5,7 @@ from collections.abc import AsyncIterator
 import fakeredis.aioredis
 import httpx
 import pytest
+from fastapi import FastAPI
 
 from app.core.config import AppEnvironment, Settings
 from app.main import create_app
@@ -30,10 +31,12 @@ def repository(fake_redis: fakeredis.aioredis.FakeRedis) -> RedisStateRepository
 
 
 @pytest.fixture
-async def client(
-    settings: Settings, repository: RedisStateRepository
-) -> AsyncIterator[httpx.AsyncClient]:
-    app = create_app(settings, repository=repository)
+def app(settings: Settings, repository: RedisStateRepository) -> FastAPI:
+    return create_app(settings, repository=repository)
+
+
+@pytest.fixture
+async def client(app: FastAPI) -> AsyncIterator[httpx.AsyncClient]:
     transport = httpx.ASGITransport(app=app)
     async with httpx.AsyncClient(transport=transport, base_url="http://test") as test_client:
         yield test_client
