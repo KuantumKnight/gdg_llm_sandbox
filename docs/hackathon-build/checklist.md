@@ -17,7 +17,7 @@
   Acceptance: Production settings reject placeholder/weak secrets and unsafe provider configuration; the package imports cleanly and quality tools run from documented commands.
   Verify: `uv sync --all-groups && uv run ruff check . && uv run mypy app`
 
-- [ ] **2. Implement challenge, access, and replay-security primitives**
+- [x] **2. Implement challenge, access, and replay-security primitives**
   Spec ref: `spec.md > 6.3 Access and session service; 6.4 Challenge engine; 6.7 Redis repositories and atomic scripts`
   What to build: Add random session credentials, constant-time verification, HMAC proof derivation, prompt rendering, exact output-only solve checks, HMAC request digests, and versioned AES-GCM replay encryption.
   Acceptance: Proofs are deterministic per session and unique across sessions; participant input cannot satisfy verification; tampered replay ciphertext fails closed; no secret value is serialized accidentally.

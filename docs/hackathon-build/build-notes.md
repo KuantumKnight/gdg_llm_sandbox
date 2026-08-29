@@ -56,3 +56,9 @@ The submission wow moment is the exact core loop already established in the PRD:
 Created the installable Python package, FastAPI factory, Pydantic settings and provider preset contract, environment example, locked dependency graph, Ruff/mypy/pytest configuration, and initial configuration tests. Production validation rejects placeholder secrets, unsafe remote HTTP providers, duplicate presets, and wildcard CORS.
 
 Verified with dependency sync, Ruff, strict mypy, and five passing configuration tests on Python 3.11. Production container target remains Python 3.13; the package intentionally supports Python 3.11-3.13 so the local evaluator can run it.
+
+## 2026-08-29 - Build item 2 complete
+
+Implemented independent session credentials, peppered bearer digests, constant-time secret checks, opaque identifiers, HMAC-bound canonical request digests, session-specific Base32 proof derivation, versioned prompt rendering, exact output-only solve checks, and AES-256-GCM replay encryption bound to session/idempotency associated data.
+
+Verified with Ruff, strict mypy, and thirteen focused security/challenge/crypto tests including tamper rejection and proof isolation. Corrected the development replay key to an exact 32-byte decoded key.

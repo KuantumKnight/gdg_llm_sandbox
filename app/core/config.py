@@ -85,7 +85,7 @@ class Settings(BaseSettings):
     session_token_pepper: SecretStr = SecretStr("dev-session-token-pepper-change-me")
     proof_derivation_secret: SecretStr = SecretStr("dev-proof-derivation-secret-change-me")
     idempotency_digest_secret: SecretStr = SecretStr("dev-idempotency-digest-secret-change-me")
-    replay_encryption_key: SecretStr = SecretStr("ZGV2LXJlcGxheS1lbmNyeXB0aW9uLWtleS0wMDAwMA==")
+    replay_encryption_key: SecretStr = SecretStr("ZGV2LXJlcGxheS1lbmNyeXB0aW9uLWtleS0wMDAwMDA=")
     next_round_hint: SecretStr = SecretStr("Development hint: configure the real next-round clue.")
     observability_token: SecretStr = SecretStr("dev-observability-token-change-me")
 
