@@ -23,11 +23,11 @@
   Acceptance: Proofs are deterministic per session and unique across sessions; participant input cannot satisfy verification; tampered replay ciphertext fails closed; no secret value is serialized accidentally.
   Verify: `uv run pytest tests/unit/test_security.py tests/unit/test_challenge.py tests/unit/test_replay_crypto.py`
 
-- [ ] **3. Build Redis session, idempotency, quota, and atomic-transition repositories**
+- [x] **3. Build Redis session, idempotency, quota, and atomic-transition repositories**
   Spec ref: `spec.md > 8. Redis Data Model; 9. End-to-End Data Flow; 13.3 Redis failure points`
   What to build: Add namespaced Redis repositories and Lua scripts for session creation/read, bearer verification data, attempt reservation, locks, token-bucket limits, idempotency pending/completed/unknown states, replay TTL, and first-writer-wins solve state.
   Acceptance: Multiple API replicas share authoritative state; concurrent reservations cannot exceed session limits; duplicate keys never reserve twice; live keys have bounded TTLs and no proof/provider credential is stored.
-  Verify: `docker compose -f compose.test.yml up -d redis && uv run pytest tests/integration/test_redis_repositories.py && docker compose -f compose.test.yml down`
+  Verify: `uv run pytest tests/integration/test_redis_repositories.py`; additionally run `docker compose -f compose.test.yml up -d redis` and the same tests against real Redis when a Docker daemon is available.
 
 - [ ] **4. Implement the bounded OpenAI-compatible provider gateway**
   Spec ref: `spec.md > 6.6 Provider gateway; 13.2 Provider retry matrix`

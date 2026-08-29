@@ -62,3 +62,13 @@ Verified with dependency sync, Ruff, strict mypy, and five passing configuration
 Implemented independent session credentials, peppered bearer digests, constant-time secret checks, opaque identifiers, HMAC-bound canonical request digests, session-specific Base32 proof derivation, versioned prompt rendering, exact output-only solve checks, and AES-256-GCM replay encryption bound to session/idempotency associated data.
 
 Verified with Ruff, strict mypy, and thirteen focused security/challenge/crypto tests including tamper rejection and proof isolation. Corrected the development replay key to an exact 32-byte decoded key.
+
+## 2026-08-30 - Initial deployment live
+
+Created the free Render Python service `gdg-llm-sandbox` in the confirmed workspace and Singapore region with auto-deploy from `main`. The first build exposed a runtime mismatch because Render defaulted to Python 3.14 while the project supports 3.11-3.13. Setting `PYTHON_VERSION=3.13.7` fixed the build; the root and interactive docs returned HTTP 200 at `https://gdg-llm-sandbox-637q.onrender.com`.
+
+## 2026-08-30 - Build item 3 complete
+
+Implemented versioned Redis keys, TTL-bound session persistence, token-bucket admission limits, one-call session locks, global preset concurrency, atomic attempt reservation, idempotency conflict/replay states, safe reservation release, ambiguous-outcome recording, and first-writer-wins solve transitions through Lua scripts.
+
+The local Docker CLI exists but its daemon was unavailable. The same Lua scripts were verified with `fakeredis[lua]`; `compose.test.yml` remains available for a real Redis run when Docker is started. Ruff, strict mypy, all prior unit tests, and eight shared-state integration tests pass (26 total).
