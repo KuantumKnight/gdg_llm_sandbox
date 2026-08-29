@@ -29,7 +29,7 @@
   Acceptance: Multiple API replicas share authoritative state; concurrent reservations cannot exceed session limits; duplicate keys never reserve twice; live keys have bounded TTLs and no proof/provider credential is stored.
   Verify: `uv run pytest tests/integration/test_redis_repositories.py`; additionally run `docker compose -f compose.test.yml up -d redis` and the same tests against real Redis when a Docker daemon is available.
 
-- [ ] **4. Implement the bounded OpenAI-compatible provider gateway**
+- [x] **4. Implement the bounded OpenAI-compatible provider gateway**
   Spec ref: `spec.md > 6.6 Provider gateway; 13.2 Provider retry matrix`
   What to build: Add request/result ports, public preset registry, request-scoped AsyncOpenAI adapter, fixed messages/parameters, output limits, credential modes, total timeout, and normalized upstream errors with explicit charging semantics.
   Acceptance: Participants cannot alter provider URL/model/role/parameters; participant keys are request-scoped; provider bodies/headers never leak; ambiguous failures are not automatically retried.

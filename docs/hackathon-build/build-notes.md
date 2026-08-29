@@ -72,3 +72,9 @@ Created the free Render Python service `gdg-llm-sandbox` in the confirmed worksp
 Implemented versioned Redis keys, TTL-bound session persistence, token-bucket admission limits, one-call session locks, global preset concurrency, atomic attempt reservation, idempotency conflict/replay states, safe reservation release, ambiguous-outcome recording, and first-writer-wins solve transitions through Lua scripts.
 
 The local Docker CLI exists but its daemon was unavailable. The same Lua scripts were verified with `fakeredis[lua]`; `compose.test.yml` remains available for a real Redis run when Docker is started. Ruff, strict mypy, all prior unit tests, and eight shared-state integration tests pass (26 total).
+
+## 2026-08-30 - Build item 4 complete
+
+Implemented the narrow provider port, fixed OpenAI-compatible Chat Completions adapter, request-scoped participant credential mode, server-managed credential mode, zero SDK retries, fixed model/base URL/roles/temperature/output cap, normalized provider errors with explicit charging semantics, and an operator-only provider registry.
+
+Added a deterministic development stub that refuses ordinary requests and reveals the proof only for documented injection triggers, enabling no-cost automated and live demonstrations. Ruff, strict mypy, and five provider contract/registry tests pass.
