@@ -44,3 +44,9 @@ Architecture self-review findings surfaced for organizer confirmation:
 3. Returning the current configured hint to old solved sessions is simple, but hint rotation during the event would require a `hint_version` snapshot for consistency.
 
 Research was limited to current official documentation for FastAPI containers, Pydantic settings, OpenAI-compatible provider surfaces (OpenAI, Gemini, Ollama, vLLM), async redis-py, AES-GCM, and Render deployment.
+
+## 2026-08-29 - Build checklist
+
+Build mode locked to autonomous with automated verification and no participant review pauses. Git cadence is one commit and push per verified implementation slice. The participant's direct instruction to "build the app" is treated as confirmation to execute the checklist immediately.
+
+The submission wow moment is the exact core loop already established in the PRD: normal refusal, successful session-specific proof extraction, automatic solve verification, and immediate hint reveal. Checklist review found eleven appropriately sequenced slices; shared state and provider-contract risks are built before the public attempt workflow.
