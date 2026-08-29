@@ -23,3 +23,8 @@ Assumptions requiring organizer confirmation before production:
 
 Interview/deepening rounds: 0. The participant asked for direct creation of the PRD and architecture, so the first draft uses explicit, documented assumptions from the challenge brief and can be revised without changing the core boundaries.
 
+## 2026-08-29 - Product requirements
+
+The PRD expands the brief into six stable epics: entry, credential modes, attempts, solve/reward, boundaries/privacy, and operation/demo. The intentionally surprising cases captured explicitly are duplicate requests after a client disconnect, two concurrent successful responses, session expiry during an in-flight provider call, provider authentication versus sandbox authorization, and shared-state failure after a chargeable model response.
+
+Scope guardrails retained: API-only MVP, single-turn text, approved provider presets, ephemeral storage, no leaderboard, no account system, no arbitrary provider URLs, and no content-retention feature.
