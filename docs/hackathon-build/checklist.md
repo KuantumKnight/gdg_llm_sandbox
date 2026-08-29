@@ -71,7 +71,7 @@
   Acceptance: A reviewer can reproduce and understand the project from the repository, demonstrate normal/solve/replay behavior in under five minutes, and identify all deliberate security tradeoffs.
   Verify: `uv run python scripts/demo.py --mode stub && uv run python scripts/smoke.py http://localhost:8000`
 
-- [ ] **11. Prepare submission handoff**
+- [x] **11. Prepare submission handoff**
   Spec ref: `prd.md > Submission Proof Points; spec.md > 21. Demo and Submission Flow`
   What to build: Gather the project story, final architecture and security proof points, public repository link, deployment and demo instructions, test evidence, remaining organizer configuration, and a concise video shot list.
   Acceptance: The repository contains enough verified material to deploy, record the demonstration, and prepare the event submission without reconstructing decisions from chat.

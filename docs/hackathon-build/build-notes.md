@@ -114,3 +114,9 @@ Provisioned a private free Render Key Value instance in Singapore, wired it to t
 Replaced the design-phase README with a reviewer-ready quick start, live links, architecture and request flow, API map, security/privacy boundary, failure charging matrix, configuration, verification, deployment, scaling/cost rationale, tradeoffs, and documentation index. Added a production operator guide covering preflight, settings, health, rotation, monitoring, incident response, capacity, and event closeout.
 
 Added credential-safe smoke and deterministic demo CLIs. The live demo command verified readiness, isolated session creation, normal refusal, exact replay without a second charge, injection solve, hint unlock, and solved-session read while keeping the bearer out of output.
+
+## 2026-08-30 - Build item 11 complete
+
+Created an explicitly unofficial submission handoff with the product story, concrete AI and Codex usage, implemented features, architecture, public links, test instructions, six-shot screenshot list, 90-second demo outline, limitations, organizer actions, and readiness statement.
+
+No Devpost workflow state exists in the repository, so official requirements, registration, rules, and submission status were not invented or claimed. The handoff keeps those external steps clearly open while the product and its evidence are complete.
