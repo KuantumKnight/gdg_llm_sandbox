@@ -20,6 +20,7 @@ from app.domain.errors import (
     SessionNotFoundError,
     SessionSolvedError,
 )
+from app.observability.metrics import Metrics
 from app.providers.base import ProviderRequest
 from app.providers.errors import ProviderError
 from app.providers.registry import ProviderRegistry
@@ -41,10 +42,12 @@ class AttemptService:
         settings: Settings,
         repository: RedisStateRepository,
         provider_registry: ProviderRegistry,
+        metrics: Metrics,
     ) -> None:
         self.settings = settings
         self.repository = repository
         self.provider_registry = provider_registry
+        self.metrics = metrics
         self.sessions = SessionService(settings=settings, repository=repository)
         self.replay_crypto = ReplayCrypto(settings.replay_encryption_key.get_secret_value())
 
@@ -89,6 +92,7 @@ class AttemptService:
             preset_concurrency_limit=self.settings.preset_concurrency_limit,
         )
         if reservation.status is ReservationStatus.REPLAY:
+            self.metrics.idempotency_replays.inc()
             replay = self.replay_crypto.decrypt(
                 reservation.encrypted_replay or "", associated_data=f"{session_id}:{idem_digest}"
             )
@@ -101,8 +105,11 @@ class AttemptService:
             secret=self.settings.proof_derivation_secret.get_secret_value(),
         )
         messages = render_challenge_messages(proof_token=proof, user_prompt=prompt)
+        inflight_started = False
         try:
             _configured_preset, provider = self.provider_registry.get(session.preset_id)
+            self.metrics.inflight_provider.labels(preset=session.preset_id).inc()
+            inflight_started = True
             completion = await provider.complete(
                 ProviderRequest(
                     system_prompt=messages.system,
@@ -112,6 +119,11 @@ class AttemptService:
                 participant_api_key=participant_api_key,
             )
         except ProviderError as exc:
+            self.metrics.record_attempt(
+                preset=session.preset_id,
+                outcome=exc.code,
+                solved=False,
+            )
             if exc.chargeable:
                 await self.repository.mark_outcome_unknown(
                     session=session,
@@ -125,6 +137,9 @@ class AttemptService:
                     session=session, idempotency_digest=idem_digest, owner=request_id
                 )
             raise
+        finally:
+            if inflight_started:
+                self.metrics.inflight_provider.labels(preset=session.preset_id).dec()
 
         completed_at = datetime.now(UTC)
         solved = model_output_solves(expected_proof=proof, model_output=completion.text)
@@ -155,6 +170,13 @@ class AttemptService:
             solved_at=None,
             now=completed_at,
             idempotency_ttl_seconds=self.settings.idempotency_ttl_seconds,
+        )
+        self.metrics.record_attempt(
+            preset=session.preset_id,
+            outcome="completed",
+            solved=solved,
+            input_tokens=completion.input_tokens,
+            output_tokens=completion.output_tokens,
         )
         return data.model_copy(update={"remaining_attempts": state.remaining_attempts})
 

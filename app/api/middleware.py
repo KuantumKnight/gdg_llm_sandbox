@@ -4,13 +4,17 @@ from __future__ import annotations
 
 import uuid
 from collections.abc import Awaitable, Callable
+from time import perf_counter
+from typing import cast
 
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.types import ASGIApp
 
 from app.api.error_handlers import error_response
+from app.core.logging import get_logger
 from app.core.security import new_request_id
+from app.observability.metrics import Metrics
 
 
 class RequestContextMiddleware(BaseHTTPMiddleware):
@@ -21,6 +25,7 @@ class RequestContextMiddleware(BaseHTTPMiddleware):
     async def dispatch(
         self, request: Request, call_next: Callable[[Request], Awaitable[Response]]
     ) -> Response:
+        started = perf_counter()
         supplied = request.headers.get("X-Request-ID", "")
         try:
             request_id = str(uuid.UUID(supplied))
@@ -44,5 +49,32 @@ class RequestContextMiddleware(BaseHTTPMiddleware):
             )
         else:
             response = await call_next(request)
+
+        route_object = request.scope.get("route")
+        route = getattr(route_object, "path", "unmatched")
+        metrics = cast(Metrics, request.app.state.metrics)
+        duration = perf_counter() - started
+        metrics.record_http(
+            route=route,
+            method=request.method,
+            status=response.status_code,
+            duration=duration,
+        )
+        get_logger().info(
+            "http_request",
+            extra={
+                "request_id": request_id,
+                "route": route,
+                "method": request.method,
+                "status": response.status_code,
+                "duration_ms": round(duration * 1000, 3),
+            },
+        )
         response.headers["X-Request-ID"] = request_id
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["Referrer-Policy"] = "no-referrer"
+        response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+        if request.url.path.startswith("/api/"):
+            response.headers["Cache-Control"] = "no-store"
         return response

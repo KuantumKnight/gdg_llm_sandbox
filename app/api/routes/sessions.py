@@ -5,7 +5,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Header, Request, status
 
-from app.api.dependencies import BearerDep, SessionServiceDep, SettingsDep
+from app.api.dependencies import BearerDep, MetricsDep, SessionServiceDep, SettingsDep
 from app.schemas.sessions import (
     CreateSessionRequest,
     SessionData,
@@ -20,6 +20,7 @@ async def create_session(
     payload: CreateSessionRequest,
     request: Request,
     service: SessionServiceDep,
+    metrics: MetricsDep,
     round_code: Annotated[str, Header(alias="X-Round-Code")],
 ) -> SessionEnvelope:
     created = await service.create_session(
@@ -28,6 +29,7 @@ async def create_session(
         client_ip=request.client.host if request.client else "unknown",
         now=datetime.now(UTC),
     )
+    metrics.sessions_created.labels(preset=created.preset.id).inc()
     return SessionEnvelope(
         data=SessionData.from_record(
             created.record,

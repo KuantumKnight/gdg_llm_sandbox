@@ -90,3 +90,9 @@ The API factory supports an injected repository for deterministic tests while pr
 Completed the attempt endpoint and orchestration path: bearer authorization, prompt and UUID idempotency validation, HMAC request binding, atomic reservation, challenge proof/prompt assembly, provider call, explicit charge release versus ambiguous outcome, exact output-only solve detection, atomic solved state, encrypted replay persistence, and next-round hint unlock.
 
 Replay returns the exact prior body without another charge; changing the prompt under the same idempotency key is rejected; participant input containing a proof-like token cannot solve; solved sessions short-circuit before provider work. Ruff, strict mypy, and the full 48-test suite pass.
+
+## 2026-08-30 - Build item 7 complete
+
+Added allowlist-only JSON logs with defense-in-depth secret redaction, request correlation and latency records, low-cardinality Prometheus HTTP/session/attempt/provider metrics, constant-time bearer protection for the scrape endpoint, strict default CORS, API no-store behavior, and browser-facing response security headers.
+
+Security regressions verify that configured secrets stay out of public configuration and OpenAPI, unknown log fields such as prompts are discarded, sentinel credentials are redacted, oversized bodies fail before parsing, and metrics disclose only bounded operational labels. Ruff, strict mypy, seven focused privacy/metrics tests, and the full 55-test suite pass.

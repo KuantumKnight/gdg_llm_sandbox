@@ -25,6 +25,10 @@ class PromptTooLargeError(DomainError):
     code = "PROMPT_TOO_LARGE"
 
 
+class ObservabilityUnauthorizedError(DomainError):
+    code = "OBSERVABILITY_UNAUTHORIZED"
+
+
 class SessionNotFoundError(DomainError):
     code = "SESSION_UNAUTHORIZED"
 

@@ -13,6 +13,7 @@ from app.domain.errors import (
     AttemptsExhaustedError,
     DomainError,
     IdempotencyConflictError,
+    ObservabilityUnauthorizedError,
     PresetBusyError,
     PresetNotAvailableError,
     PromptTooLargeError,
@@ -58,6 +59,9 @@ _PRESENTATIONS: dict[type[DomainError], ErrorPresentation] = {
     RateLimitedError: ErrorPresentation(429, "Too many requests. Retry later."),
     PresetBusyError: ErrorPresentation(503, "The selected provider is temporarily busy."),
     StateUnavailableError: ErrorPresentation(503, "Shared challenge state is unavailable."),
+    ObservabilityUnauthorizedError: ErrorPresentation(
+        401, "Observability authorization is invalid."
+    ),
 }
 
 

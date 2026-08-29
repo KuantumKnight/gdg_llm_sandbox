@@ -47,7 +47,7 @@
   Acceptance: One accepted request creates at most one provider call; replay returns the exact result; wrong-session proofs fail; exact model output solves once and unlocks the hint; no hint is returned before solved state.
   Verify: `uv run pytest tests/api/test_attempts.py tests/integration/test_attempt_concurrency.py`
 
-- [ ] **7. Add privacy-safe observability and infrastructure hardening**
+- [x] **7. Add privacy-safe observability and infrastructure hardening**
   Spec ref: `spec.md > 11. Security Architecture; 14. Observability and Privacy`
   What to build: Add allowlist JSON logs, correlation IDs, low-cardinality metrics, protected metrics access, strict CORS behavior, trusted proxy configuration, response security headers, and sentinel redaction tests.
   Acceptance: Logs, metrics, errors, Redis inspection, and OpenAPI contain no live credentials, access tokens, prompts, proof tokens, system prompts, or hints; health and metrics reveal only intended operational data.

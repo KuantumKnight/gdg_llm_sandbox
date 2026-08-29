@@ -14,8 +14,11 @@ from app.api.middleware import RequestContextMiddleware
 from app.api.routes.attempts import router as attempts_router
 from app.api.routes.config import router as config_router
 from app.api.routes.health import router as health_router
+from app.api.routes.metrics import router as metrics_router
 from app.api.routes.sessions import router as sessions_router
 from app.core.config import Settings, get_settings
+from app.core.logging import configure_logging
+from app.observability.metrics import Metrics
 from app.providers.registry import ProviderRegistry
 from app.repositories.redis import Keyspace, create_redis_client
 from app.repositories.state import RedisStateRepository
@@ -29,6 +32,24 @@ def create_app(
     """Create an application instance with explicit, testable settings."""
     resolved = settings or get_settings()
     owns_repository = repository is None
+    configure_logging(
+        level=resolved.log_level,
+        secrets=[
+            resolved.redis_url.get_secret_value(),
+            resolved.round_access_code.get_secret_value(),
+            resolved.session_token_pepper.get_secret_value(),
+            resolved.proof_derivation_secret.get_secret_value(),
+            resolved.idempotency_digest_secret.get_secret_value(),
+            resolved.replay_encryption_key.get_secret_value(),
+            resolved.next_round_hint.get_secret_value(),
+            resolved.observability_token.get_secret_value(),
+            *[
+                preset.server_api_key.get_secret_value()
+                for preset in resolved.provider_presets
+                if preset.server_api_key is not None
+            ],
+        ],
+    )
 
     @asynccontextmanager
     async def lifespan(application: FastAPI) -> AsyncIterator[None]:
@@ -53,6 +74,7 @@ def create_app(
         lifespan=lifespan,
     )
     app.state.settings = resolved
+    app.state.metrics = Metrics()
     app.state.provider_registry = ProviderRegistry(resolved)
     if repository is not None:
         app.state.repository = repository
@@ -79,6 +101,7 @@ def create_app(
     app.include_router(sessions_router)
     app.include_router(attempts_router)
     app.include_router(health_router)
+    app.include_router(metrics_router)
 
     @app.get("/", include_in_schema=False)
     async def root() -> dict[str, str]:

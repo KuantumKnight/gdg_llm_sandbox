@@ -7,6 +7,7 @@ from typing import Annotated, cast
 from fastapi import Depends, Header, Request
 
 from app.core.config import Settings
+from app.observability.metrics import Metrics
 from app.providers.registry import ProviderRegistry
 from app.repositories.state import RedisStateRepository
 from app.services.attempts import AttemptService
@@ -32,12 +33,22 @@ def get_provider_registry(request: Request) -> ProviderRegistry:
     return cast(ProviderRegistry, request.app.state.provider_registry)
 
 
+def get_metrics(request: Request) -> Metrics:
+    return cast(Metrics, request.app.state.metrics)
+
+
 def get_attempt_service(
     settings: Annotated[Settings, Depends(get_settings)],
     repository: Annotated[RedisStateRepository, Depends(get_repository)],
     registry: Annotated[ProviderRegistry, Depends(get_provider_registry)],
+    metrics: Annotated[Metrics, Depends(get_metrics)],
 ) -> AttemptService:
-    return AttemptService(settings=settings, repository=repository, provider_registry=registry)
+    return AttemptService(
+        settings=settings,
+        repository=repository,
+        provider_registry=registry,
+        metrics=metrics,
+    )
 
 
 def bearer_token(authorization: Annotated[str | None, Header()] = None) -> str:
@@ -53,5 +64,6 @@ SettingsDep = Annotated[Settings, Depends(get_settings)]
 RepositoryDep = Annotated[RedisStateRepository, Depends(get_repository)]
 SessionServiceDep = Annotated[SessionService, Depends(get_session_service)]
 ProviderRegistryDep = Annotated[ProviderRegistry, Depends(get_provider_registry)]
+MetricsDep = Annotated[Metrics, Depends(get_metrics)]
 AttemptServiceDep = Annotated[AttemptService, Depends(get_attempt_service)]
 BearerDep = Annotated[str, Depends(bearer_token)]
