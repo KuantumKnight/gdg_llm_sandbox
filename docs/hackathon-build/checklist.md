@@ -11,7 +11,7 @@
 
 ## Checklist
 
-- [ ] **1. Scaffold the typed application and validated configuration**
+- [x] **1. Scaffold the typed application and validated configuration**
   Spec ref: `spec.md > 3. Stack; 10. File Structure; 16. CI/CD and Deployment`
   What to build: Create the Python package, locked dependency setup, application factory, settings and preset models, safe environment example, quality-tool configuration, and initial test harness.
   Acceptance: Production settings reject placeholder/weak secrets and unsafe provider configuration; the package imports cleanly and quality tools run from documented commands.
@@ -76,4 +76,3 @@
   What to build: Gather the project story, final architecture and security proof points, public repository link, deployment and demo instructions, test evidence, remaining organizer configuration, and a concise video shot list.
   Acceptance: The repository contains enough verified material to deploy, record the demonstration, and prepare the event submission without reconstructing decisions from chat.
   Verify: Review `README.md`, `docs/hackathon-build/`, final test output, commit history, and remote repository state; confirm remaining external steps are explicitly listed.
-

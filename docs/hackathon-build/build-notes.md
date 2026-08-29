@@ -50,3 +50,9 @@ Research was limited to current official documentation for FastAPI containers, P
 Build mode locked to autonomous with automated verification and no participant review pauses. Git cadence is one commit and push per verified implementation slice. The participant's direct instruction to "build the app" is treated as confirmation to execute the checklist immediately.
 
 The submission wow moment is the exact core loop already established in the PRD: normal refusal, successful session-specific proof extraction, automatic solve verification, and immediate hint reveal. Checklist review found eleven appropriately sequenced slices; shared state and provider-contract risks are built before the public attempt workflow.
+
+## 2026-08-29 - Build item 1 complete
+
+Created the installable Python package, FastAPI factory, Pydantic settings and provider preset contract, environment example, locked dependency graph, Ruff/mypy/pytest configuration, and initial configuration tests. Production validation rejects placeholder secrets, unsafe remote HTTP providers, duplicate presets, and wildcard CORS.
+
+Verified with dependency sync, Ruff, strict mypy, and five passing configuration tests on Python 3.11. Production container target remains Python 3.13; the package intentionally supports Python 3.11-3.13 so the local evaluator can run it.

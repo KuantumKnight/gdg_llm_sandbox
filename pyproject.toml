@@ -1,0 +1,60 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "gdg-llm-sandbox"
+version = "0.1.0"
+description = "Prompt-injection challenge backend for GDG VIT Chennai"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+  "cryptography>=44.0.0",
+  "fastapi>=0.115.0",
+  "httpx>=0.28.0",
+  "openai>=1.75.0",
+  "prometheus-client>=0.21.0",
+  "pydantic-settings>=2.8.0",
+  "redis>=5.2.0",
+  "uvicorn[standard]>=0.34.0",
+]
+
+[dependency-groups]
+dev = [
+  "mypy>=1.15.0",
+  "pytest>=8.3.0",
+  "pytest-asyncio>=0.26.0",
+  "pytest-cov>=6.1.0",
+  "respx>=0.22.0",
+  "ruff>=0.11.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-markers"
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "A", "ASYNC", "C4", "DTZ", "PIE", "PT", "RET", "RUF", "SIM", "T20"]
+ignore = ["B008"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unreachable = true
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = ["prometheus_client.*"]
+ignore_missing_imports = true
+
