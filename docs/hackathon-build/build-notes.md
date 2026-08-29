@@ -28,3 +28,5 @@ Interview/deepening rounds: 0. The participant asked for direct creation of the 
 The PRD expands the brief into six stable epics: entry, credential modes, attempts, solve/reward, boundaries/privacy, and operation/demo. The intentionally surprising cases captured explicitly are duplicate requests after a client disconnect, two concurrent successful responses, session expiry during an in-flight provider call, provider authentication versus sandbox authorization, and shared-state failure after a chargeable model response.
 
 Scope guardrails retained: API-only MVP, single-turn text, approved provider presets, ephemeral storage, no leaderboard, no account system, no arbitrary provider URLs, and no content-retention feature.
+
+Architecture self-review finding: exact idempotent replay and a blanket ban on retaining model output were contradictory. The privacy contract now permits only an encrypted completed-response replay record with a maximum ten-minute TTL. It remains forbidden to retain prompts, credentials, system prompts, proof tokens, or conversation history.

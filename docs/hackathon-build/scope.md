@@ -38,7 +38,7 @@ The LLM boundary is intentionally vulnerable. The surrounding web service is not
 - User accounts, password recovery, social login, or long-lived profiles; the event already controls participant admission.
 - A public leaderboard, team management, or judging workflow; these are event-platform concerns rather than the prompt-injection core.
 - Arbitrary participant-supplied provider base URLs; allowing them would create an SSRF and data-exfiltration surface.
-- Storing raw prompts, responses, or participant provider keys for analytics.
+- Storing raw prompts, responses, or participant provider keys for analytics or durable history; a completed response may exist briefly in an encrypted idempotency replay record.
 - A general-purpose LLM proxy or multi-turn chat product.
 - Perfect prompt-injection prevention; that would defeat the challenge.
 - Kubernetes, a message queue, or a relational database for the initial event workload.
@@ -60,4 +60,3 @@ The LLM boundary is intentionally vulnerable. The surrounding web service is not
 - The first deployment targets one API service plus one managed Redis-compatible store.
 - One OpenAI-compatible model path is sufficient for the core; additional provider presets are adapters, not separate application flows.
 - Organizers supply the actual round access code, secret material, model allowlist, and next-round hint through environment variables or secret management.
-

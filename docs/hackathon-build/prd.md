@@ -189,9 +189,10 @@ As a participant, I want my provider key and prompt content handled minimally so
 Acceptance criteria:
 
 - The sandbox never returns a submitted provider key in success or error responses.
-- The published privacy behavior states that participant keys, raw prompts, raw model responses, system prompts, and proof tokens are not retained in shared session storage or application logs by default.
+- The published privacy behavior states that participant keys, raw prompts, system prompts, and proof tokens are not retained in shared session storage or application logs.
+- A completed model response may be stored only in an encrypted idempotency replay record with a short published lifetime; it is not retained as conversation history or analytics data.
 - Operational records use identifiers, counts, durations, result categories, and token-usage totals rather than raw content.
-- When the session expires, its authorization state, attempt metadata, idempotency records, and solved state become unavailable after the documented cleanup window.
+- Idempotency replay records expire within ten minutes, and all remaining authorization state, attempt metadata, and solved state become unavailable when the session cleanup window ends.
 
 #### PRD-5.3 - Keep the puzzle intentionally solvable
 
@@ -314,4 +315,3 @@ Acceptance criteria:
 ## Product Acceptance Gate
 
 The MVP is ready to demonstrate when every acceptance criterion in PRD-1 through PRD-6 that applies to the enabled provider mode has an automated or documented manual verification, the complete core journey succeeds against at least one real model, and no critical secret appears in repository history, API responses, shared state inspection, or logs.
-

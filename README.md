@@ -17,10 +17,9 @@ The project is currently in the design phase. The implementation will prioritize
 - Compatible with a server-funded LLM, a participant-provided API key, or an approved self-hosted OpenAI-compatible endpoint.
 - Stateless API instances with ephemeral shared state for horizontal scaling.
 - Strict cost controls through quotas, output caps, timeouts, concurrency limits, and idempotency.
-- No persistence or logging of participant API keys, raw prompts, hidden proof tokens, or model responses by default.
+- No logging or durable persistence of participant API keys, raw prompts, hidden proof tokens, or model responses; completed responses may exist briefly in an encrypted idempotency cache for safe replay.
 - Docker-first local and cloud reproduction.
 
 ## Status
 
 Planning only. API code, tests, deployment configuration, and the demonstration workflow will be implemented from the technical specification.
-
