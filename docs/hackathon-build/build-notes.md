@@ -84,3 +84,9 @@ Added a deterministic development stub that refuses ordinary requests and reveal
 Added versioned public configuration, access-code session creation, one-time bearer return, peppered bearer authorization, solved-session reads, liveness, Redis-aware readiness, stable domain/validation error envelopes, request correlation, request-size enforcement, and optional exact-origin CORS.
 
 The API factory supports an injected repository for deterministic tests while production owns its Redis lifecycle. Ruff, strict mypy, and eight API tests cover safe configuration exposure, generic access denial, unknown presets, forbidden extra fields, missing/wrong/cross-session bearers, authenticated expiry, and health behavior.
+
+## 2026-08-30 - Build item 6 complete
+
+Completed the attempt endpoint and orchestration path: bearer authorization, prompt and UUID idempotency validation, HMAC request binding, atomic reservation, challenge proof/prompt assembly, provider call, explicit charge release versus ambiguous outcome, exact output-only solve detection, atomic solved state, encrypted replay persistence, and next-round hint unlock.
+
+Replay returns the exact prior body without another charge; changing the prompt under the same idempotency key is rejected; participant input containing a proof-like token cannot solve; solved sessions short-circuit before provider work. Ruff, strict mypy, and the full 48-test suite pass.

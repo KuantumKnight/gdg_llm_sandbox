@@ -15,12 +15,23 @@ from app.domain.errors import (
     IdempotencyConflictError,
     PresetBusyError,
     PresetNotAvailableError,
+    PromptTooLargeError,
     RateLimitedError,
     RoundAccessDeniedError,
     SessionExpiredError,
     SessionNotFoundError,
     SessionSolvedError,
     StateUnavailableError,
+)
+from app.providers.errors import (
+    ProviderConfigurationError,
+    ProviderCredentialRejectedError,
+    ProviderCredentialRequiredError,
+    ProviderError,
+    ProviderMalformedResponseError,
+    ProviderRateLimitedError,
+    ProviderTimeoutError,
+    ProviderUnavailableError,
 )
 
 
@@ -33,6 +44,9 @@ class ErrorPresentation:
 _PRESENTATIONS: dict[type[DomainError], ErrorPresentation] = {
     RoundAccessDeniedError: ErrorPresentation(403, "Round access was denied."),
     PresetNotAvailableError: ErrorPresentation(404, "The selected provider preset is unavailable."),
+    PromptTooLargeError: ErrorPresentation(
+        422, "The prompt exceeds the published character limit."
+    ),
     SessionNotFoundError: ErrorPresentation(401, "Session authorization is invalid."),
     SessionExpiredError: ErrorPresentation(410, "This challenge session has expired."),
     SessionSolvedError: ErrorPresentation(409, "This challenge session is already solved."),
@@ -58,6 +72,17 @@ def install_error_handlers(app: FastAPI) -> None:
             status=presentation.status,
             code=exc.code,
             message=presentation.message,
+            retryable=exc.retryable,
+        )
+
+    @app.exception_handler(ProviderError)
+    async def provider_error_handler(request: Request, exc: ProviderError) -> JSONResponse:
+        status, message = _provider_presentation(exc)
+        return error_response(
+            request,
+            status=status,
+            code=exc.code,
+            message=message,
             retryable=exc.retryable,
         )
 
@@ -107,3 +132,21 @@ def error_response(
             }
         },
     )
+
+
+def _provider_presentation(exc: ProviderError) -> tuple[int, str]:
+    if isinstance(exc, ProviderCredentialRequiredError):
+        return 422, "This provider preset requires a participant API key."
+    if isinstance(exc, ProviderCredentialRejectedError):
+        return 422, "The provider rejected the supplied credential."
+    if isinstance(exc, ProviderConfigurationError):
+        return 503, "The selected provider preset is unavailable."
+    if isinstance(exc, ProviderRateLimitedError):
+        return 503, "The provider is temporarily rate limited."
+    if isinstance(exc, ProviderTimeoutError):
+        return 504, "The provider response timed out; the attempt outcome may be unknown."
+    if isinstance(exc, ProviderMalformedResponseError):
+        return 502, "The provider returned an unusable response."
+    if isinstance(exc, ProviderUnavailableError):
+        return 503, "The provider is temporarily unavailable."
+    return 503, "The provider request failed."

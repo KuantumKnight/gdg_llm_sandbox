@@ -21,6 +21,10 @@ class PresetNotAvailableError(DomainError):
     code = "PRESET_NOT_AVAILABLE"
 
 
+class PromptTooLargeError(DomainError):
+    code = "PROMPT_TOO_LARGE"
+
+
 class SessionNotFoundError(DomainError):
     code = "SESSION_UNAUTHORIZED"
 

@@ -41,7 +41,7 @@
   Acceptance: Valid admission returns a bearer once; invalid access is generic and limited; cross-session or expired authorization fails; public endpoints expose no private URL, key, proof, prompt, or hint.
   Verify: `uv run pytest tests/api/test_config.py tests/api/test_sessions.py tests/api/test_health.py`
 
-- [ ] **6. Complete attempt orchestration, idempotent replay, solve, and hint reveal**
+- [x] **6. Complete attempt orchestration, idempotent replay, solve, and hint reveal**
   Spec ref: `spec.md > 6.5 Attempt orchestrator; 7.4 Submit an attempt; 9.2 Attempt lifecycle; 9.3 Solve lifecycle`
   What to build: Connect validation, authorization, Redis reservation, challenge prompt, provider call, charging policy, exact proof verification, atomic solve, encrypted replay, solved-session short circuit, and stable errors.
   Acceptance: One accepted request creates at most one provider call; replay returns the exact result; wrong-session proofs fail; exact model output solves once and unlocks the hint; no hint is returned before solved state.

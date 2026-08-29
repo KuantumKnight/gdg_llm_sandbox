@@ -11,10 +11,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from app import __version__
 from app.api.error_handlers import install_error_handlers
 from app.api.middleware import RequestContextMiddleware
+from app.api.routes.attempts import router as attempts_router
 from app.api.routes.config import router as config_router
 from app.api.routes.health import router as health_router
 from app.api.routes.sessions import router as sessions_router
 from app.core.config import Settings, get_settings
+from app.providers.registry import ProviderRegistry
 from app.repositories.redis import Keyspace, create_redis_client
 from app.repositories.state import RedisStateRepository
 
@@ -51,6 +53,7 @@ def create_app(
         lifespan=lifespan,
     )
     app.state.settings = resolved
+    app.state.provider_registry = ProviderRegistry(resolved)
     if repository is not None:
         app.state.repository = repository
 
@@ -74,6 +77,7 @@ def create_app(
     install_error_handlers(app)
     app.include_router(config_router)
     app.include_router(sessions_router)
+    app.include_router(attempts_router)
     app.include_router(health_router)
 
     @app.get("/", include_in_schema=False)
