@@ -30,3 +30,17 @@ The PRD expands the brief into six stable epics: entry, credential modes, attemp
 Scope guardrails retained: API-only MVP, single-turn text, approved provider presets, ephemeral storage, no leaderboard, no account system, no arbitrary provider URLs, and no content-retention feature.
 
 Architecture self-review finding: exact idempotent replay and a blanket ban on retaining model output were contradictory. The privacy contract now permits only an encrypted completed-response replay record with a maximum ten-minute TTL. It remains forbidden to retain prompts, credentials, system prompts, proof tokens, or conversation history.
+
+## 2026-08-29 - Technical specification and architecture
+
+Stack: Python 3.13, FastAPI/Uvicorn, Pydantic Settings, OpenAI-compatible async provider client, Redis/Valkey, AES-GCM replay encryption, Prometheus metrics, pytest, Docker Compose, Render, and GitHub Actions.
+
+Architecture decisions: stateless API replicas; Redis-only ephemeral state; API-only interactive demo; fixed provider presets; no queue or relational database; exact output-only proof verification; required idempotency; one in-flight attempt per session; separate secrets for admission, proof derivation, request digests, replay encryption, observability, hint, and providers.
+
+Architecture self-review findings surfaced for organizer confirmation:
+
+1. A session-specific proof reduces sharing but may differ from an expected single global answer. The API supports either choice without route changes.
+2. Ambiguous provider timeouts must remain charged to prevent silent duplicate cost; this tradeoff is visible to participants.
+3. Returning the current configured hint to old solved sessions is simple, but hint rotation during the event would require a `hint_version` snapshot for consistency.
+
+Research was limited to current official documentation for FastAPI containers, Pydantic settings, OpenAI-compatible provider surfaces (OpenAI, Gemini, Ollama, vLLM), async redis-py, AES-GCM, and Render deployment.
