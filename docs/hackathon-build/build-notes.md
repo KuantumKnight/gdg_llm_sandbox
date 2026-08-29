@@ -102,3 +102,9 @@ Security regressions verify that configured secrets stay out of public configura
 Added an explicit PRD-to-test verification matrix, repository-level 85% coverage enforcement, provider failure/accounting integration tests, and an opt-in test that executes the production Lua transitions against real Redis under a unique self-cleaning namespace. The deterministic stub and mocked provider clients keep the default suite free of paid calls.
 
 The local Docker daemon remains unavailable, so the real-Redis case is skipped locally unless `TEST_REDIS_URL` is supplied; the packaging milestone will run it through the CI Redis service. Ruff, strict mypy, all 57 locally runnable tests, and 91% application coverage pass.
+
+## 2026-08-30 - Build item 9 complete
+
+Added a pinned Python 3.13 multi-stage image with a non-root runtime, minimal build context, Compose API/Redis topology, dependency-free health probe, schema-valid Render Blueprint, tracked-file credential scan, and GitHub Actions quality and container jobs. CI executed the real-Redis Lua test, 85% coverage gate, secret scan, image build, Compose health wait, and in-container readiness smoke successfully.
+
+Provisioned a private free Render Key Value instance in Singapore, wired it to the existing auto-deployed web service, and verified `/health/ready` plus the complete normal-attempt, exact-replay, injection-solve, and hint-reveal flow at `https://gdg-llm-sandbox-637q.onrender.com`. The Blueprint keeps Render's existing immutable Python runtime and locked `uv` environment; Docker provides the equivalent non-root local and CI artifact.

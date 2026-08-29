@@ -59,7 +59,7 @@
   Acceptance: Every PRD epic has automated evidence; concurrent calls preserve counts and solve state; test runs make no paid provider calls; coverage focuses on security and state transitions.
   Verify: `uv run ruff format --check . && uv run ruff check . && uv run mypy app && uv run pytest --cov=app --cov-report=term-missing --cov-fail-under=85`
 
-- [ ] **9. Package, reproduce, deploy, and continuously verify the service**
+- [x] **9. Package, reproduce, deploy, and continuously verify the service**
   Spec ref: `spec.md > 5. Deployment Architecture; 16. CI/CD and Deployment`
   What to build: Add non-root multi-stage Dockerfile, Docker Compose app/Redis stack, Render Blueprint, healthcheck, GitHub Actions CI, `.dockerignore`, and immutable production command.
   Acceptance: A clean clone can start the same image locally; container health/readiness pass; configuration stays external; CI runs lint, types, tests, secret scanning, image build, and smoke checks.
