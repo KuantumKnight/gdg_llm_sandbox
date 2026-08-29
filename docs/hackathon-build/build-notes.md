@@ -78,3 +78,9 @@ The local Docker CLI exists but its daemon was unavailable. The same Lua scripts
 Implemented the narrow provider port, fixed OpenAI-compatible Chat Completions adapter, request-scoped participant credential mode, server-managed credential mode, zero SDK retries, fixed model/base URL/roles/temperature/output cap, normalized provider errors with explicit charging semantics, and an operator-only provider registry.
 
 Added a deterministic development stub that refuses ordinary requests and reveals the proof only for documented injection triggers, enabling no-cost automated and live demonstrations. Ruff, strict mypy, and five provider contract/registry tests pass.
+
+## 2026-08-30 - Build item 5 complete
+
+Added versioned public configuration, access-code session creation, one-time bearer return, peppered bearer authorization, solved-session reads, liveness, Redis-aware readiness, stable domain/validation error envelopes, request correlation, request-size enforcement, and optional exact-origin CORS.
+
+The API factory supports an injected repository for deterministic tests while production owns its Redis lifecycle. Ruff, strict mypy, and eight API tests cover safe configuration exposure, generic access denial, unknown presets, forbidden extra fields, missing/wrong/cross-session bearers, authenticated expiry, and health behavior.

@@ -35,7 +35,7 @@
   Acceptance: Participants cannot alter provider URL/model/role/parameters; participant keys are request-scoped; provider bodies/headers never leak; ambiguous failures are not automatically retried.
   Verify: `uv run pytest tests/contract/test_openai_compatible.py tests/unit/test_provider_registry.py`
 
-- [ ] **5. Expose configuration, session, and health APIs**
+- [x] **5. Expose configuration, session, and health APIs**
   Spec ref: `spec.md > 7.1 Public configuration; 7.2 Create a session; 7.3 Read a session; 7.5 Health and metrics`
   What to build: Add request IDs, body/content validation, error envelopes, public configuration, round-code admission, session creation/read authorization, liveness, and Redis-aware readiness routes with OpenAPI examples.
   Acceptance: Valid admission returns a bearer once; invalid access is generic and limited; cross-session or expired authorization fails; public endpoints expose no private URL, key, proof, prompt, or hint.

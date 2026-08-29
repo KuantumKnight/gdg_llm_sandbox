@@ -13,6 +13,14 @@ class StateUnavailableError(DomainError):
     retryable = True
 
 
+class RoundAccessDeniedError(DomainError):
+    code = "ROUND_ACCESS_DENIED"
+
+
+class PresetNotAvailableError(DomainError):
+    code = "PRESET_NOT_AVAILABLE"
+
+
 class SessionNotFoundError(DomainError):
     code = "SESSION_UNAUTHORIZED"
 
