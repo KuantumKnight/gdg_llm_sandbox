@@ -44,7 +44,8 @@ Codex translated the challenge brief into a scope, PRD, technical architecture, 
 - Output-only solve verification and immediate hint unlock.
 - Allowlist JSON logs, protected low-cardinality metrics, response security headers, strict CORS.
 - Non-root Docker image, Compose topology, schema-valid Render Blueprint, and required GitHub Actions gates.
-- Live deterministic demo backed by private Render Key Value.
+- Responsive participant interface with generated editorial imagery and full dark/light themes.
+- Live Gemini 3.5 Flash-Lite challenge backed by private Render Key Value.
 
 ## Architecture summary
 
@@ -66,10 +67,10 @@ uv run ruff check .
 uv run mypy app
 uv run pytest --cov=app --cov-report=term-missing --cov-fail-under=85
 uv run python scripts/scan_secrets.py
-uv run python scripts/demo.py --base-url https://gdg-llm-sandbox-637q.onrender.com --mode stub
+uv run python scripts/demo.py --mode stub
 ```
 
-GitHub Actions also starts real Redis, executes the production Lua flow, builds the non-root image, waits for the Compose stack, and runs an in-container readiness probe. The local suite currently has 59 passing tests, one real-Redis test skipped without `TEST_REDIS_URL`, and 91% application coverage; CI supplies that Redis variable and runs the skipped case.
+GitHub Actions also starts real Redis, executes the production Lua flow, builds the non-root image, waits for the Compose stack, and runs an in-container readiness probe. The local suite currently has 63 passing tests and one real-Redis test skipped without `TEST_REDIS_URL`; CI supplies that Redis variable and runs the skipped case.
 
 ## Screenshot shot list
 
@@ -84,25 +85,26 @@ GitHub Actions also starts real Redis, executes the production Lua flow, builds 
 
 1. **0:00-0:12 — Problem:** prompt injection should be the game, not an excuse for unsafe infrastructure.
 2. **0:12-0:25 — Architecture:** point to stateless API, bounded provider gateway, session proof, and Redis atomic state.
-3. **0:25-0:55 — Live flow:** run `scripts/demo.py --show-sensitive`; show ordinary refusal, exact replay, solve, and hint.
+3. **0:25-0:55 — Live flow:** use the custom participant interface to show a Gemini refusal, the verified transformation injection, solve verification, and hint.
 4. **0:55-1:12 — Security/cost:** mention no raw prompt logging, no arbitrary provider URL, one provider call per idempotency key, quotas, output caps, and ambiguous charging.
 5. **1:12-1:25 — Evidence:** show the passing CI jobs, 91% coverage, public repository, and live deployment.
 6. **1:25-1:30 — Close:** restate the educational boundary and event-ready next step.
 
 ## Known limitations
 
-- The public demo intentionally runs the predictable development stub and development credentials; an actual event must use production mode, strong organizer values, and an approved real provider preset.
+- The public demo uses a real server-managed Gemini 3.5 Flash-Lite preset but still uses development admission and hint values; an actual event must enable production mode and rotate every organizer value.
 - Free Render resources can cold-start and are not sized for an unbounded public launch.
-- The API-only MVP relies on Swagger or scripts instead of a custom participant frontend.
+- Model latency and prompt-injection behavior can change without an application release, so every provider revision requires recalibration.
 - Session-specific proofs reduce answer sharing but do not stop participants from sharing injection techniques.
-- Model behavior and challenge difficulty must be recalibrated for the real provider before the round.
+- The currently verified Gemini solution is documented for demonstration and must be replaced or withheld for a competitive round.
 
 ## Organizer checklist
 
 - [ ] Start/register the actual Devpost hackathon workflow and acknowledge its current official rules.
 - [ ] Load the official submission fields, judging criteria, deadlines, and media constraints.
-- [ ] Replace demo round code, hint, crypto secrets, observability token, and provider preset in Render.
-- [ ] Run a sacrificial production-mode normal/replay/solve flow with the selected real model.
+- [ ] Replace demo round code, hint, crypto secrets, and observability token in Render.
+- [x] Configure and calibrate a server-managed real provider preset.
+- [x] Run a sacrificial normal/solve smoke flow with the selected real model.
 - [ ] Capture the six screenshots without exposing credentials or participant content.
 - [ ] Record and upload the demo video; add its public URL above.
 - [ ] Reconcile this draft against official form wording and word limits.
@@ -110,4 +112,4 @@ GitHub Actions also starts real Redis, executes the production Lua flow, builds 
 
 ## Readiness
 
-The product, architecture, repository, deployment, deterministic demo, documentation, and automated evidence are ready for organizer configuration and media capture. Official event registration, rule review, form-specific copy, screenshots, and video remain deliberately unclaimed.
+The product, architecture, repository, responsive participant interface, Gemini deployment, deterministic local demo, documentation, and automated evidence are ready for organizer hardening and media capture. Official event registration, rule review, production-secret rotation, form-specific copy, screenshots, and video remain deliberately unclaimed.

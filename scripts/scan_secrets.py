@@ -11,6 +11,7 @@ PATTERNS = {
     "private key": re.compile(r"-----BEGIN (?:RSA |EC |DSA |OPENSSH )?PRIVATE KEY-----"),
     "GitHub token": re.compile(r"\bgh[pousr]_[A-Za-z0-9]{36,}\b"),
     "OpenAI-style key": re.compile(r"\bsk-(?:proj-)?[A-Za-z0-9_-]{20,}\b"),
+    "Gemini API key": re.compile(r"\bAQ\.[A-Za-z0-9_-]{40,}\b"),
     "AWS access key": re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
     "credentialed URL": re.compile(r"\b(?:redis|rediss|https?)://[^\s/:@]+:[^\s/@]+@"),
 }
