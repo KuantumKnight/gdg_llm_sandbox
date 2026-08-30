@@ -16,6 +16,32 @@ from app.core.logging import get_logger
 from app.core.security import new_request_id
 from app.observability.metrics import Metrics
 
+_APP_CONTENT_SECURITY_POLICY = (
+    "default-src 'self'; "
+    "base-uri 'self'; "
+    "connect-src 'self'; "
+    "font-src 'self'; "
+    "form-action 'self'; "
+    "frame-ancestors 'none'; "
+    "img-src 'self' data:; "
+    "object-src 'none'; "
+    "script-src 'self'; "
+    "style-src 'self'"
+)
+
+_DOCS_CONTENT_SECURITY_POLICY = (
+    "default-src 'self'; "
+    "base-uri 'self'; "
+    "connect-src 'self'; "
+    "font-src 'self' https://cdn.jsdelivr.net; "
+    "form-action 'self'; "
+    "frame-ancestors 'none'; "
+    "img-src 'self' data: https://fastapi.tiangolo.com; "
+    "object-src 'none'; "
+    "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+    "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net"
+)
+
 
 class RequestContextMiddleware(BaseHTTPMiddleware):
     def __init__(self, app: ASGIApp, *, body_limit_bytes: int) -> None:
@@ -75,6 +101,12 @@ class RequestContextMiddleware(BaseHTTPMiddleware):
         response.headers["X-Frame-Options"] = "DENY"
         response.headers["Referrer-Policy"] = "no-referrer"
         response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+        response.headers["Content-Security-Policy"] = (
+            _DOCS_CONTENT_SECURITY_POLICY
+            if request.url.path.startswith(("/docs", "/redoc"))
+            else _APP_CONTENT_SECURITY_POLICY
+        )
+        response.headers["Cross-Origin-Opener-Policy"] = "same-origin"
         if request.url.path.startswith("/api/"):
             response.headers["Cache-Control"] = "no-store"
         return response

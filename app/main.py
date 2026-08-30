@@ -4,9 +4,12 @@ from __future__ import annotations
 
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from app import __version__
 from app.api.error_handlers import install_error_handlers
@@ -22,6 +25,8 @@ from app.observability.metrics import Metrics
 from app.providers.registry import ProviderRegistry
 from app.repositories.redis import Keyspace, create_redis_client
 from app.repositories.state import RedisStateRepository
+
+WEB_DIRECTORY = Path(__file__).resolve().parent / "web"
 
 
 def create_app(
@@ -102,10 +107,15 @@ def create_app(
     app.include_router(attempts_router)
     app.include_router(health_router)
     app.include_router(metrics_router)
+    app.mount("/static", StaticFiles(directory=WEB_DIRECTORY), name="static")
 
     @app.get("/", include_in_schema=False)
-    async def root() -> dict[str, str]:
-        return {"service": resolved.app_name, "version": __version__}
+    async def root() -> FileResponse:
+        return FileResponse(
+            WEB_DIRECTORY / "index.html",
+            media_type="text/html",
+            headers={"Cache-Control": "no-cache"},
+        )
 
     return app
 

@@ -2,14 +2,16 @@
 
 [![CI](https://github.com/KuantumKnight/gdg_llm_sandbox/actions/workflows/ci.yml/badge.svg)](https://github.com/KuantumKnight/gdg_llm_sandbox/actions/workflows/ci.yml)
 
-GDG LLM Sandbox is an API-first prompt-injection challenge for GDG VIT Chennai. Each participant receives an isolated session and tries to make an LLM reveal a proof hidden in its system prompt. The backend—not participant input—verifies the model output and unlocks the next-round hint.
+GDG LLM Sandbox is a browser-based prompt-injection challenge for GDG VIT Chennai, backed by a documented API. Each participant receives an isolated session and tries to make an LLM reveal a proof hidden in its system prompt. The backend, not participant input, verifies the model output and unlocks the next-round hint.
 
-- Live API: [gdg-llm-sandbox-637q.onrender.com](https://gdg-llm-sandbox-637q.onrender.com)
+- Live app: [gdg-llm-sandbox-637q.onrender.com](https://gdg-llm-sandbox-637q.onrender.com)
 - Interactive API docs: [gdg-llm-sandbox-637q.onrender.com/docs](https://gdg-llm-sandbox-637q.onrender.com/docs)
 - Architecture: [docs/hackathon-build/spec.md](docs/hackathon-build/spec.md)
 - Product requirements: [docs/hackathon-build/prd.md](docs/hackathon-build/prd.md)
 
 The demo deployment uses the deterministic no-cost provider and development round code `dev-round-access-code`. Replace all development values before running a real event.
+
+Open the live app, enter the development round code, select the local stub, and craft prompts in the challenge workspace. The browser keeps the session bearer in memory only, generates a fresh idempotency key for each attempt, and exposes retry-safe recovery when a request has an uncertain outcome.
 
 ## Five-minute demo
 
@@ -64,7 +66,7 @@ uv run python scripts/demo.py --mode stub
 
 ```mermaid
 flowchart LR
-    P[Participant / Swagger UI] -->|round code, bearer, prompt| E[Render edge]
+    P[Participant UI / API client] -->|round code, bearer, prompt| E[Render edge]
     E --> A[Stateless FastAPI service]
     A --> C[Challenge engine]
     A --> G[Bounded provider gateway]

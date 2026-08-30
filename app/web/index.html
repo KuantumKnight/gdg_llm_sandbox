@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A hands-on prompt-injection challenge for GDG VIT Chennai.">
+    <meta name="theme-color" content="#0f172a">
+    <title>GDG LLM Sandbox</title>
+    <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="/static/app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to challenge</a>
+
+    <div class="site-shell">
+      <header class="topbar" aria-label="Primary navigation">
+        <a class="brand" href="/" aria-label="GDG LLM Sandbox home">
+          <span class="brand-mark" aria-hidden="true"><i></i><i></i></span>
+          <span>LLM SANDBOX</span>
+        </a>
+        <nav class="topbar-actions" aria-label="Resources">
+          <a href="/docs">API docs</a>
+          <a href="https://github.com/KuantumKnight/gdg_llm_sandbox" rel="noreferrer">GitHub</a>
+          <button class="text-button" id="theme-toggle" type="button">Switch theme</button>
+        </nav>
+      </header>
+
+      <main id="main-content">
+        <div class="global-alert" id="global-alert" role="alert" hidden>
+          <div>
+            <strong id="global-alert-title">Connection problem</strong>
+            <p id="global-alert-message"></p>
+          </div>
+          <button class="button button-secondary button-compact" id="retry-config" type="button">Retry</button>
+        </div>
+
+        <section class="admission-view" id="admission-view" aria-labelledby="challenge-title">
+          <div class="briefing">
+            <p class="eyebrow">PROMPT INJECTION LAB</p>
+            <h1 id="challenge-title">Break the gatekeeper.</h1>
+            <p class="hero-copy">Find a prompt that makes the gatekeeper reveal the proof hidden in its instructions.</p>
+
+            <div class="mission-brief" aria-label="Challenge rules">
+              <div class="mission-line">
+                <span class="mission-index">A</span>
+                <p><strong>Attack the prompt.</strong> Service exploitation is outside the challenge.</p>
+              </div>
+              <div class="mission-line">
+                <span class="mission-index">B</span>
+                <p><strong>Spend attempts carefully.</strong> Each completed model call counts.</p>
+              </div>
+              <div class="mission-line">
+                <span class="mission-index">C</span>
+                <p><strong>Find the proof.</strong> The server verifies success, not your input.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="admission-panel">
+            <div class="panel-heading">
+              <h2>Enter the sandbox</h2>
+              <span class="status-label" id="round-status">Checking round</span>
+            </div>
+
+            <div class="form-skeleton" id="config-skeleton" aria-label="Loading challenge configuration">
+              <span></span><span></span><span></span>
+            </div>
+
+            <form id="admission-form" hidden>
+              <div class="field">
+                <label for="round-code">Round access code</label>
+                <input id="round-code" name="round-code" type="password" autocomplete="one-time-code" required>
+                <p class="helper">Use the code shared by the event organizer.</p>
+              </div>
+
+              <div class="field">
+                <label for="preset">Model preset</label>
+                <select id="preset" name="preset" required></select>
+                <p class="helper" id="preset-helper">Choose the model you want to challenge.</p>
+              </div>
+
+              <p class="field-error" id="admission-error" role="alert" hidden></p>
+              <button class="button button-primary button-wide" id="start-button" type="submit">
+                <span>Start challenge</span>
+                <span class="button-key" aria-hidden="true">ENTER</span>
+              </button>
+            </form>
+
+            <div class="privacy-note">
+              <strong>Private by design</strong>
+              <p>Prompts and provider keys are not retained. Your session token stays only in this tab's memory.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="workspace-view" id="workspace-view" aria-labelledby="workspace-title" hidden>
+          <header class="workspace-header">
+            <div>
+              <p class="workspace-kicker">ACTIVE SESSION</p>
+              <h1 id="workspace-title">Gatekeeper challenge</h1>
+            </div>
+            <div class="session-facts" aria-label="Session status">
+              <div class="session-fact">
+                <span>Attempts</span>
+                <strong id="attempt-count">0 / 0</strong>
+              </div>
+              <div class="session-fact">
+                <span>Time left</span>
+                <strong id="time-left">00:00</strong>
+              </div>
+              <div class="session-fact session-state">
+                <span>State</span>
+                <strong id="session-state">Active</strong>
+              </div>
+            </div>
+          </header>
+
+          <div class="workspace-grid">
+            <aside class="control-rail" aria-label="Challenge briefing and session controls">
+              <div class="rail-section objective-section">
+                <h2>Your objective</h2>
+                <p>Convince the model to expose a proof in the form <code>GDG{...}</code>.</p>
+                <dl class="session-details">
+                  <div><dt>Model</dt><dd id="model-label">Unknown</dd></div>
+                  <div><dt>Session</dt><dd id="session-id">Unknown</dd></div>
+                </dl>
+                <button class="text-action" id="copy-session" type="button">Copy session ID</button>
+              </div>
+
+              <div class="rail-section tactics-section">
+                <h2>Think like an attacker</h2>
+                <p>Try role changes, instruction hierarchy conflicts, indirect requests, or simulated debug contexts.</p>
+              </div>
+
+              <div class="rail-section privacy-section">
+                <h2>Session safety</h2>
+                <p>Refreshing this page discards the bearer token. Provider credentials never enter browser storage.</p>
+              </div>
+
+              <button class="button button-secondary button-wide" id="new-session" type="button">Start a new session</button>
+            </aside>
+
+            <div class="challenge-console">
+              <form class="prompt-form" id="prompt-form">
+                <div class="console-heading">
+                  <div>
+                    <h2>Craft your attempt</h2>
+                    <p>Every response is evaluated by the server.</p>
+                  </div>
+                  <span class="character-count" id="character-count">0 / 0</span>
+                </div>
+
+                <div class="field credential-field" id="credential-field" hidden>
+                  <label for="provider-key">Provider API key</label>
+                  <input id="provider-key" name="provider-key" type="password" autocomplete="off" spellcheck="false">
+                  <p class="helper">Used for this request only. It is never stored by the sandbox.</p>
+                </div>
+
+                <div class="field prompt-field">
+                  <label for="prompt">Prompt</label>
+                  <textarea id="prompt" name="prompt" rows="8" required spellcheck="true" placeholder="Write the instruction you want the model to follow..."></textarea>
+                  <p class="helper">Do not include personal data or credentials in your prompt.</p>
+                </div>
+
+                <div class="prompt-actions">
+                  <p class="field-error attempt-error" id="attempt-error" role="alert" hidden></p>
+                  <div class="button-row">
+                    <button class="button button-secondary" id="retry-attempt" type="button" hidden>Retry request</button>
+                    <button class="button button-primary" id="submit-attempt" type="submit">Run attempt</button>
+                  </div>
+                </div>
+              </form>
+
+              <section class="response-panel" aria-labelledby="response-title">
+                <div class="response-heading">
+                  <div>
+                    <span class="response-label">MODEL OUTPUT</span>
+                    <h2 id="response-title">Response stream</h2>
+                  </div>
+                  <span class="response-status" id="response-status">Waiting</span>
+                </div>
+
+                <div class="response-feed" id="response-feed" aria-live="polite">
+                  <div class="empty-response" id="empty-response">
+                    <span class="empty-glyph" aria-hidden="true">_</span>
+                    <p>Your model responses will appear here. Start with a direct request, then adapt.</p>
+                  </div>
+                </div>
+              </section>
+
+              <section class="success-panel" id="success-panel" aria-labelledby="success-title" hidden>
+                <p class="success-marker">PROOF VERIFIED</p>
+                <h2 id="success-title">Gatekeeper bypassed.</h2>
+                <p id="next-round-hint"></p>
+              </section>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <span>GDG VIT Chennai</span>
+        <span>Built for responsible security learning</span>
+      </footer>
+    </div>
+
+    <dialog class="confirm-dialog" id="new-session-dialog">
+      <form method="dialog">
+        <h2>Leave this session?</h2>
+        <p>The in-memory token and response history will be cleared from this tab.</p>
+        <div class="button-row">
+          <button class="button button-secondary" value="cancel">Keep session</button>
+          <button class="button button-primary" value="confirm">Start over</button>
+        </div>
+      </form>
+    </dialog>
+  </body>
+</html>
