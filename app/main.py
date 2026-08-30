@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import mimetypes
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -27,6 +28,7 @@ from app.repositories.redis import Keyspace, create_redis_client
 from app.repositories.state import RedisStateRepository
 
 WEB_DIRECTORY = Path(__file__).resolve().parent / "web"
+mimetypes.add_type("image/webp", ".webp")
 
 
 def create_app(

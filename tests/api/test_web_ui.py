@@ -16,6 +16,8 @@ async def test_root_serves_participant_ui(client: httpx.AsyncClient) -> None:
     assert 'href="/static/favicon.svg"' in response.text
     assert 'href="/static/styles.css"' in response.text
     assert 'src="/static/app.js"' in response.text
+    assert 'src="/static/assets/security-lab-hero.webp"' in response.text
+    assert 'src="/static/assets/infrastructure-macro.webp"' in response.text
     assert "dev-round-access-code" not in response.text
     assert "dev-provider-key" not in response.text
 
@@ -24,6 +26,8 @@ async def test_ui_assets_are_served_with_security_headers(client: httpx.AsyncCli
     stylesheet = await client.get("/static/styles.css")
     script = await client.get("/static/app.js")
     favicon = await client.get("/static/favicon.svg")
+    hero = await client.get("/static/assets/security-lab-hero.webp")
+    infrastructure = await client.get("/static/assets/infrastructure-macro.webp")
 
     assert stylesheet.status_code == 200
     assert stylesheet.headers["content-type"].startswith("text/css")
@@ -35,6 +39,12 @@ async def test_ui_assets_are_served_with_security_headers(client: httpx.AsyncCli
     assert "state.token = session.session_token" in script.text
     assert favicon.status_code == 200
     assert favicon.headers["content-type"].startswith("image/svg+xml")
+    assert hero.status_code == 200
+    assert hero.headers["content-type"].startswith("image/webp")
+    assert len(hero.content) > 50_000
+    assert infrastructure.status_code == 200
+    assert infrastructure.headers["content-type"].startswith("image/webp")
+    assert len(infrastructure.content) > 80_000
 
 
 async def test_ui_copy_has_no_forbidden_dash_characters(client: httpx.AsyncClient) -> None:

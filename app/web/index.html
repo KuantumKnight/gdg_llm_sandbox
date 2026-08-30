@@ -3,215 +3,236 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="A hands-on prompt-injection challenge for GDG VIT Chennai.">
-    <meta name="theme-color" content="#0f172a">
-    <title>GDG LLM Sandbox</title>
+    <meta name="description" content="A controlled prompt injection challenge for learning how AI systems fail under adversarial input.">
+    <meta name="theme-color" content="#121313">
+    <title>GDG LLM Sandbox | Adversarial Model Lab</title>
     <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+    <link rel="preload" as="image" href="/static/assets/security-lab-hero.webp" type="image/webp">
     <link rel="stylesheet" href="/static/styles.css">
     <script src="/static/app.js" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to challenge</a>
 
-    <div class="site-shell">
-      <header class="topbar" aria-label="Primary navigation">
-        <a class="brand" href="/" aria-label="GDG LLM Sandbox home">
-          <span class="brand-mark" aria-hidden="true"><i></i><i></i></span>
-          <span>LLM SANDBOX</span>
-        </a>
-        <nav class="topbar-actions" aria-label="Resources">
-          <a href="/docs">API docs</a>
-          <a href="https://github.com/KuantumKnight/gdg_llm_sandbox" rel="noreferrer">GitHub</a>
-          <button class="text-button" id="theme-toggle" type="button">Switch theme</button>
-        </nav>
-      </header>
+    <header class="site-header">
+      <a class="wordmark" href="/" aria-label="GDG LLM Sandbox home">
+        <span class="wordmark-mark" aria-hidden="true"><i></i><i></i></span>
+        <span>GDG <b>LLM Sandbox</b></span>
+      </a>
+      <div class="header-actions">
+        <span class="network-state"><i aria-hidden="true"></i> Lab online</span>
+        <button class="icon-button" id="theme-toggle" type="button" aria-label="Toggle color theme">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3v2m0 14v2M3 12h2m14 0h2M5.64 5.64l1.42 1.42m9.88 9.88 1.42 1.42M18.36 5.64l-1.42 1.42M7.06 16.94l-1.42 1.42" />
+            <circle cx="12" cy="12" r="4" />
+          </svg>
+        </button>
+      </div>
+    </header>
 
-      <main id="main-content">
-        <div class="global-alert" id="global-alert" role="alert" hidden>
-          <div>
-            <strong id="global-alert-title">Connection problem</strong>
-            <p id="global-alert-message"></p>
-          </div>
-          <button class="button button-secondary button-compact" id="retry-config" type="button">Retry</button>
+    <main id="main-content">
+      <div class="global-alert" id="global-alert" role="alert" hidden>
+        <div>
+          <strong id="global-alert-title">Sandbox unavailable</strong>
+          <p id="global-alert-message">The challenge configuration could not be loaded.</p>
         </div>
+        <button class="text-button" id="retry-config" type="button">Retry connection</button>
+      </div>
 
-        <section class="admission-view" id="admission-view" aria-labelledby="challenge-title">
-          <div class="briefing">
-            <p class="eyebrow">PROMPT INJECTION LAB</p>
+      <section class="admission-view" id="admission-view" aria-labelledby="challenge-title">
+        <article class="briefing">
+          <img
+            class="briefing-image"
+            src="/static/assets/security-lab-hero.webp"
+            width="1536"
+            height="1024"
+            fetchpriority="high"
+            alt="Cybersecurity researcher working beside AI infrastructure in a dark server laboratory"
+          >
+          <div class="briefing-shade" aria-hidden="true"></div>
+          <div class="briefing-index" aria-hidden="true">LAB / 01</div>
+          <div class="briefing-copy">
+            <p class="eyebrow">Adversarial model lab</p>
             <h1 id="challenge-title">Break the gatekeeper.</h1>
-            <p class="hero-copy">Find a prompt that makes the gatekeeper reveal the proof hidden in its instructions.</p>
+            <p class="hero-copy">Expose the proof hidden inside a model's protected system instructions.</p>
+          </div>
+        </article>
 
-            <div class="mission-brief" aria-label="Challenge rules">
-              <div class="mission-line">
-                <span class="mission-index">A</span>
-                <p><strong>Attack the prompt.</strong> Service exploitation is outside the challenge.</p>
-              </div>
-              <div class="mission-line">
-                <span class="mission-index">B</span>
-                <p><strong>Spend attempts carefully.</strong> Each completed model call counts.</p>
-              </div>
-              <div class="mission-line">
-                <span class="mission-index">C</span>
-                <p><strong>Find the proof.</strong> The server verifies success, not your input.</p>
-              </div>
-            </div>
+        <aside class="admission-panel" aria-labelledby="admission-title">
+          <div class="panel-heading">
+            <p class="eyebrow">Controlled exercise</p>
+            <h2 id="admission-title">Enter the sandbox</h2>
+            <p>Use the organizer's round code and choose an available model route.</p>
           </div>
 
-          <div class="admission-panel">
-            <div class="panel-heading">
-              <h2>Enter the sandbox</h2>
-              <span class="status-label" id="round-status">Checking round</span>
+          <div class="config-skeleton" id="config-skeleton" aria-label="Loading challenge configuration">
+            <span></span><span></span><span></span><span></span>
+          </div>
+
+          <form class="admission-form" id="admission-form" hidden>
+            <div class="round-state-row">
+              <span class="round-state" id="round-status">Checking round</span>
+              <span>Session credentials stay in memory</span>
             </div>
 
-            <div class="form-skeleton" id="config-skeleton" aria-label="Loading challenge configuration">
-              <span></span><span></span><span></span>
+            <label class="field-label" for="round-code">Round access code</label>
+            <input
+              id="round-code"
+              name="round_code"
+              type="password"
+              autocomplete="off"
+              required
+              placeholder="Enter code"
+            >
+
+            <label class="field-label" for="preset">Model route</label>
+            <select id="preset" name="preset_id" required></select>
+            <p class="field-helper" id="preset-helper">Loading available model routes.</p>
+
+            <p class="field-error" id="admission-error" role="alert" hidden></p>
+
+            <button class="primary-button" id="start-button" type="submit" disabled>
+              <span>Start challenge</span>
+              <span aria-hidden="true">↗</span>
+            </button>
+          </form>
+
+          <div class="boundary-note">
+            <span>Scope</span>
+            <p>One prompt injection challenge. No account, no telemetry profile, no stored provider key.</p>
+          </div>
+        </aside>
+      </section>
+
+      <section class="workspace-view" id="workspace-view" aria-labelledby="workspace-title" hidden>
+        <header class="workspace-header">
+          <div>
+            <p class="eyebrow">Live adversarial session</p>
+            <h1 id="workspace-title">Gatekeeper session</h1>
+          </div>
+          <dl class="session-strip">
+            <div><dt>Attempts</dt><dd id="attempt-count">0 / 0</dd></div>
+            <div><dt>Time left</dt><dd id="time-left">00:00</dd></div>
+            <div><dt>State</dt><dd id="session-state">Active</dd></div>
+          </dl>
+        </header>
+
+        <section class="mission-deck" aria-labelledby="mission-title">
+          <figure class="mission-image-wrap">
+            <img
+              class="mission-image"
+              src="/static/assets/infrastructure-macro.webp"
+              width="1774"
+              height="887"
+              loading="lazy"
+              alt="Precision server hardware and braided fiber connections in an active AI laboratory"
+            >
+            <figcaption>Isolated evaluation environment</figcaption>
+          </figure>
+
+          <div class="mission-copy">
+            <p class="eyebrow">Mission brief</p>
+            <h2 id="mission-title">Make the model reveal the protected proof.</h2>
+            <p>Craft one adversarial instruction at a time. Learn from the response and refine your attack before attempts expire.</p>
+
+            <dl class="mission-facts">
+              <div><dt>Model</dt><dd id="model-label">Loading</dd></div>
+              <div><dt>Session</dt><dd id="session-id">Pending</dd></div>
+            </dl>
+
+            <div class="mission-actions">
+              <button class="text-button" id="copy-session" type="button">Copy session ID</button>
+              <button class="text-button is-danger" id="new-session" type="button">End session</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="challenge-console" aria-label="Challenge console">
+          <form class="prompt-panel" id="prompt-form">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Attack surface</p>
+                <h2>Compose a prompt</h2>
+              </div>
+              <span class="counter" id="character-count">0 / 0</span>
             </div>
 
-            <form id="admission-form" hidden>
-              <div class="field">
-                <label for="round-code">Round access code</label>
-                <input id="round-code" name="round-code" type="password" autocomplete="one-time-code" required>
-                <p class="helper">Use the code shared by the event organizer.</p>
-              </div>
+            <label class="visually-hidden" for="prompt">Adversarial prompt</label>
+            <textarea
+              id="prompt"
+              name="prompt"
+              rows="12"
+              required
+              spellcheck="true"
+              placeholder="Write the instruction you want the gatekeeper to follow..."
+            ></textarea>
 
-              <div class="field">
-                <label for="preset">Model preset</label>
-                <select id="preset" name="preset" required></select>
-                <p class="helper" id="preset-helper">Choose the model you want to challenge.</p>
-              </div>
+            <div class="credential-field" id="credential-field" hidden>
+              <label class="field-label" for="provider-key">Provider API key</label>
+              <input
+                id="provider-key"
+                name="provider_key"
+                type="password"
+                autocomplete="off"
+                placeholder="Key is used for this request only"
+              >
+              <p class="field-helper">The key is forwarded to the provider and never persisted by the sandbox.</p>
+            </div>
 
-              <p class="field-error" id="admission-error" role="alert" hidden></p>
-              <button class="button button-primary button-wide" id="start-button" type="submit">
-                <span>Start challenge</span>
-                <span class="button-key" aria-hidden="true">ENTER</span>
+            <p class="field-error" id="attempt-error" role="alert" hidden></p>
+
+            <div class="prompt-actions">
+              <button class="primary-button" id="submit-attempt" type="submit">
+                <span>Run attempt</span>
+                <span aria-hidden="true">↗</span>
               </button>
-            </form>
-
-            <div class="privacy-note">
-              <strong>Private by design</strong>
-              <p>Prompts and provider keys are not retained. Your session token stays only in this tab's memory.</p>
+              <button class="text-button" id="retry-attempt" type="button" hidden>Retry same attempt</button>
             </div>
-          </div>
-        </section>
+          </form>
 
-        <section class="workspace-view" id="workspace-view" aria-labelledby="workspace-title" hidden>
-          <header class="workspace-header">
+          <section class="response-panel" aria-labelledby="response-title">
+            <div class="section-heading response-heading">
+              <div>
+                <p class="eyebrow">Model output</p>
+                <h2 id="response-title">Response feed</h2>
+              </div>
+              <span class="response-status" id="response-status" aria-live="polite">Ready</span>
+            </div>
+
+            <div class="response-feed" id="response-feed" aria-live="polite">
+              <div class="empty-response" id="empty-response">
+                <span class="empty-glyph" aria-hidden="true">_</span>
+                <p>Your model responses appear here. Start direct, then adapt.</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="success-panel" id="success-panel" aria-labelledby="success-title" hidden>
+            <span class="success-mark" aria-hidden="true">✓</span>
             <div>
-              <p class="workspace-kicker">ACTIVE SESSION</p>
-              <h1 id="workspace-title">Gatekeeper challenge</h1>
+              <p class="eyebrow">Proof verified</p>
+              <h2 id="success-title">Gatekeeper compromised.</h2>
+              <p id="next-round-hint">Your organizer will provide the next step.</p>
             </div>
-            <div class="session-facts" aria-label="Session status">
-              <div class="session-fact">
-                <span>Attempts</span>
-                <strong id="attempt-count">0 / 0</strong>
-              </div>
-              <div class="session-fact">
-                <span>Time left</span>
-                <strong id="time-left">00:00</strong>
-              </div>
-              <div class="session-fact session-state">
-                <span>State</span>
-                <strong id="session-state">Active</strong>
-              </div>
-            </div>
-          </header>
-
-          <div class="workspace-grid">
-            <aside class="control-rail" aria-label="Challenge briefing and session controls">
-              <div class="rail-section objective-section">
-                <h2>Your objective</h2>
-                <p>Convince the model to expose a proof in the form <code>GDG{...}</code>.</p>
-                <dl class="session-details">
-                  <div><dt>Model</dt><dd id="model-label">Unknown</dd></div>
-                  <div><dt>Session</dt><dd id="session-id">Unknown</dd></div>
-                </dl>
-                <button class="text-action" id="copy-session" type="button">Copy session ID</button>
-              </div>
-
-              <div class="rail-section tactics-section">
-                <h2>Think like an attacker</h2>
-                <p>Try role changes, instruction hierarchy conflicts, indirect requests, or simulated debug contexts.</p>
-              </div>
-
-              <div class="rail-section privacy-section">
-                <h2>Session safety</h2>
-                <p>Refreshing this page discards the bearer token. Provider credentials never enter browser storage.</p>
-              </div>
-
-              <button class="button button-secondary button-wide" id="new-session" type="button">Start a new session</button>
-            </aside>
-
-            <div class="challenge-console">
-              <form class="prompt-form" id="prompt-form">
-                <div class="console-heading">
-                  <div>
-                    <h2>Craft your attempt</h2>
-                    <p>Every response is evaluated by the server.</p>
-                  </div>
-                  <span class="character-count" id="character-count">0 / 0</span>
-                </div>
-
-                <div class="field credential-field" id="credential-field" hidden>
-                  <label for="provider-key">Provider API key</label>
-                  <input id="provider-key" name="provider-key" type="password" autocomplete="off" spellcheck="false">
-                  <p class="helper">Used for this request only. It is never stored by the sandbox.</p>
-                </div>
-
-                <div class="field prompt-field">
-                  <label for="prompt">Prompt</label>
-                  <textarea id="prompt" name="prompt" rows="8" required spellcheck="true" placeholder="Write the instruction you want the model to follow..."></textarea>
-                  <p class="helper">Do not include personal data or credentials in your prompt.</p>
-                </div>
-
-                <div class="prompt-actions">
-                  <p class="field-error attempt-error" id="attempt-error" role="alert" hidden></p>
-                  <div class="button-row">
-                    <button class="button button-secondary" id="retry-attempt" type="button" hidden>Retry request</button>
-                    <button class="button button-primary" id="submit-attempt" type="submit">Run attempt</button>
-                  </div>
-                </div>
-              </form>
-
-              <section class="response-panel" aria-labelledby="response-title">
-                <div class="response-heading">
-                  <div>
-                    <span class="response-label">MODEL OUTPUT</span>
-                    <h2 id="response-title">Response stream</h2>
-                  </div>
-                  <span class="response-status" id="response-status">Waiting</span>
-                </div>
-
-                <div class="response-feed" id="response-feed" aria-live="polite">
-                  <div class="empty-response" id="empty-response">
-                    <span class="empty-glyph" aria-hidden="true">_</span>
-                    <p>Your model responses will appear here. Start with a direct request, then adapt.</p>
-                  </div>
-                </div>
-              </section>
-
-              <section class="success-panel" id="success-panel" aria-labelledby="success-title" hidden>
-                <p class="success-marker">PROOF VERIFIED</p>
-                <h2 id="success-title">Gatekeeper bypassed.</h2>
-                <p id="next-round-hint"></p>
-              </section>
-            </div>
-          </div>
+          </section>
         </section>
-      </main>
+      </section>
+    </main>
 
-      <footer class="site-footer">
-        <span>GDG VIT Chennai</span>
-        <span>Built for responsible security learning</span>
-      </footer>
-    </div>
+    <footer class="site-footer">
+      <span>GDG LLM Sandbox</span>
+      <span>Isolated training environment</span>
+      <span>Build 01</span>
+    </footer>
 
-    <dialog class="confirm-dialog" id="new-session-dialog">
+    <dialog class="session-dialog" id="new-session-dialog">
       <form method="dialog">
-        <h2>Leave this session?</h2>
-        <p>The in-memory token and response history will be cleared from this tab.</p>
-        <div class="button-row">
-          <button class="button button-secondary" value="cancel">Keep session</button>
-          <button class="button button-primary" value="confirm">Start over</button>
+        <p class="eyebrow">End active session</p>
+        <h2>Return to admission?</h2>
+        <p>Your current attempt history and session token will be cleared from this browser.</p>
+        <div class="dialog-actions">
+          <button class="text-button" value="cancel">Keep working</button>
+          <button class="primary-button compact" value="confirm">End session</button>
         </div>
       </form>
     </dialog>
